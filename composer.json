@@ -1,5 +1,5 @@
 {
-  "name": "bbdn/core",
+  "name": "bbdn/core/php",
   "description": "Small PHP library for making REST Calls the Blackboard Learn",
   "keywords": ["bbdn", "composer", "package"],
   "license": "MIT",
@@ -16,7 +16,7 @@
   },
   "autoload": {
     "psr-4": {
-      "BBDN\\Core\\": "src/"
+      "BBDN\\Core\\PHP\\": "src/"
     }
   }
 }
