@@ -1,5 +1,5 @@
 {
-  "name": "bbdn/core/php",
+  "name": "bbdn/core",
   "description": "Small PHP library for making REST Calls the Blackboard Learn",
   "keywords": ["bbdn", "composer", "package"],
   "license": "MIT",
