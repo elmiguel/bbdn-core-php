@@ -1,0 +1,22 @@
+{
+  "name": "bbdn/core",
+  "description": "Small PHP library for making REST Calls the Blackboard Learn",
+  "keywords": ["bbdn", "composer", "package"],
+  "license": "MIT",
+  "authors": [{
+    "name": "Michael Bechtel",
+    "email": "elmiguelut99@gmail.com"
+  }],
+  "type": "project",
+  "require": {
+    "php": ">=5.4"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "5.2.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "BBDN\\Core\\": "src/"
+    }
+  }
+}
