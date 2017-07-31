@@ -8,7 +8,7 @@
 *
 *  @author Michael Bechtel
 */
-class AuthToken{
+class AuthToken {
 
    /**  @var string $m_SampleProperty define here what this variable is for, do this for every instance variable */
    private $m_SampleProperty = '';
@@ -113,7 +113,7 @@ class AuthToken{
    *
    * @return boolean
    */
-   public function isExpired($) {
+   public function isExpired() {
      return true;
    }
 
