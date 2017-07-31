@@ -81,7 +81,7 @@ class AuthToken {
    * @return string
    */
    public function setToken() {
-
+     return 'Token would be set here!\n';
    }
 
    /**
