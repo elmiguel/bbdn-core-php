@@ -1,17 +1,26 @@
 <?php namespace bbdn\core;
 
+require_once 'vendor/autoload.php';
 /**
-*  A sample class
+*  AuthToken
 *
-*  Use this section to define what this class is doing, the PHPDocumentator will use this
-*  to automatically generate an API documentation using this information.
+*  AuthToken is a class that allows ease of getting, settings and monitoring
+*  the token retrieved by the BbRestAPI oauth request token API route.
 *
 *  @author Michael Bechtel
 */
 class AuthToken {
+   public var $key = '';
+   public var $secret = '';
+   public var $verbose = false;
+   public var $token = false;
 
-   /**  @var string $m_SampleProperty define here what this variable is for, do this for every instance variable */
-   private $m_SampleProperty = '';
+   public function __construct($key, $secret, $verbose) {
+     $this->key = $key;
+     $this->secret = $secret;
+     $this->verbose = $verbose;
+     $this->token = '';
+   }
 
    /**
    * Get Key
@@ -81,7 +90,8 @@ class AuthToken {
    * @return string
    */
    public function setToken() {
-     return 'Token would be set here!\n';
+
+     return 'Token would be set here!';
    }
 
    /**
