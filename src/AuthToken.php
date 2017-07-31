@@ -10,10 +10,6 @@ require_once 'vendor/autoload.php';
 *  @author Michael Bechtel
 */
 class AuthToken {
-   public var $key = '';
-   public var $secret = '';
-   public var $verbose = false;
-   public var $token = false;
 
    public function __construct($key, $secret, $verbose) {
      $this->key = $key;
