@@ -16,7 +16,7 @@
   },
   "autoload": {
     "psr-4": {
-      "BBDN\\Core\\PHP\\": "src/"
+      "bbdn\\core\\": "src/"
     }
   }
 }

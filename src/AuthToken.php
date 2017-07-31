@@ -1,4 +1,4 @@
-<?php namespace BBDN\Core\PHP;
+<?php namespace bbdn\core;
 
 /**
 *  A sample class
