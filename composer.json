@@ -10,7 +10,7 @@
   "type": "project",
   "require": {
     "php": ">=5.4",
-    "lusitanian/oauth": "^0.8.10"
+    "pear/http_request2": "^2.3"
   },
   "require-dev": {
     "phpunit/phpunit": "5.2.*"

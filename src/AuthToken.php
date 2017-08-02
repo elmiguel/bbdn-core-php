@@ -1,6 +1,5 @@
 <?php namespace bbdn\core;
-
-require_once 'vendor/autoload.php';
+require_once './bbdn/vendor/autoload.php';
 /**
 *  AuthToken
 *
@@ -11,11 +10,12 @@ require_once 'vendor/autoload.php';
 */
 class AuthToken {
 
-   public function __construct($key, $secret, $verbose) {
+   public function __construct($key, $secret, $tokenRoutes, $verbose) {
      $this->key = $key;
      $this->secret = $secret;
+     $this->tokenRoutes = $tokenRoutes;
      $this->verbose = $verbose;
-     $this->token = '';
+     $this->payload = null;
    }
 
    /**
@@ -26,7 +26,6 @@ class AuthToken {
    * @return string
    */
    public function getKey() {
-
    }
 
    /**
@@ -86,8 +85,44 @@ class AuthToken {
    * @return string
    */
    public function setToken() {
+     if ($this->verbose) {
+       echo $this->tokenRoutes['set_token'] . PHP_EOL;
+       var_dump($this->tokenRoutes['payload']);
+       echo PHP_EOL;
+     }
 
-     return 'Token would be set here!';
+      $curl = curl_init($this->tokenRoutes['set_token'] . '?grant_type=client_credentials');
+
+      if ($this->verbose) {
+        print_r($curl);
+        echo PHP_EOL;
+        echo PHP_EOL;
+      }
+
+      $header = array();
+      $header[] = 'Content-type: application/x-www-form-urlencoded';
+      $header[] = 'Authorization: Basic ' . base64_encode($this->key . ':' . $this->secret);
+
+      if ($this->verbose) {
+        print_r($header);
+        echo PHP_EOL;
+        echo PHP_EOL;
+      }
+
+      curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+      curl_setopt($curl, CURLOPT_POST, true);
+      // curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+      curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($curl, CURLOPT_VERBOSE, 1);
+      $resp = curl_exec($curl);
+
+      if ($this->verbose) {
+        print_r($resp);
+        echo PHP_EOL;
+        echo PHP_EOL;
+      }
+      
+      $this->payload = json_decode($resp);
    }
 
    /**
