@@ -87,7 +87,6 @@ class AuthToken {
    public function setToken() {
      if ($this->verbose) {
        echo $this->tokenRoutes['set_token'] . PHP_EOL;
-       var_dump($this->tokenRoutes['payload']);
        echo PHP_EOL;
      }
 
@@ -121,7 +120,7 @@ class AuthToken {
         echo PHP_EOL;
         echo PHP_EOL;
       }
-      
+
       $this->payload = json_decode($resp);
    }
 
