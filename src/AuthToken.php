@@ -53,7 +53,7 @@ class AuthToken {
    }
 
    /**
-   * Set Secret
+   * Set Secret / needed??
    *
    * Set the secret and return it back to the caller
    *
@@ -62,18 +62,18 @@ class AuthToken {
    * @return string
    */
    public function setSecret($secret) {
-     return $secret;
+     $this->secret = $secret;
    }
 
    /**
-   * Get Token
+   * Get Token / needed??
    *
    * Retrieve the Currently stored token and return it back to the caller
    *
    * @return string
    */
    public function getToken() {
-
+     return $this->payload['access_token'];
    }
 
    /**
@@ -125,14 +125,50 @@ class AuthToken {
    }
 
    /**
-   * Revoke Token
+   * Revoke Token // removed from api??
    *
    * Revoke the token and return the results of the task.
    *
    * @return string
    */
    public function revokeToken() {
+     if ($this->verbose) {
+       echo $this->tokenRoutes['revoke_token'] . PHP_EOL;
+       echo PHP_EOL;
+     }
 
+      $curl = curl_init($this->tokenRoutes['revoke_token']);
+
+      if ($this->verbose) {
+        print_r($curl);
+        echo PHP_EOL;
+        echo PHP_EOL;
+      }
+
+      $header = array();
+      // $header[] = 'Content-type: application/x-www-form-urlencoded';
+      $header[] = 'Authorization: Basic ' . base64_encode($this->key . ':' . $this->secret);
+
+      if ($this->verbose) {
+        print_r($header);
+        echo PHP_EOL;
+        echo PHP_EOL;
+      }
+
+      curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+      curl_setopt($curl, CURLOPT_POST, true);
+      // curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+      curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($curl, CURLOPT_VERBOSE, 1);
+      $resp = curl_exec($curl);
+
+      if ($this->verbose) {
+        print_r($resp);
+        echo PHP_EOL;
+        echo PHP_EOL;
+      }
+
+      $this->payload = json_decode($resp);
    }
 
    /**
