@@ -9,14 +9,19 @@ require_once './bbdn/vendor/autoload.php';
 *  @author Michael Bechtel
 */
 class AuthToken {
+  private $key;
+  private $secret;
+  private $apiConfig;
+  private $verbose;
+  private $payload;
 
-   public function __construct($key, $secret, $tokenRoutes, $verbose) {
-     $this->key = $key;
-     $this->secret = $secret;
-     $this->tokenRoutes = $tokenRoutes;
-     $this->verbose = $verbose;
-     $this->payload = null;
-   }
+  public function __construct($key, $secret, $apiConfig, $verbose) {
+    $this->key = $key;
+    $this->secret = $secret;
+    $this->apiConfig = $apiConfig;
+    $this->verbose = $verbose;
+    $this->payload = null;
+  }
 
    /**
    * Get Key
@@ -49,7 +54,27 @@ class AuthToken {
    * @return string
    */
    public function getSecret() {
-
+     return $this->secret;
+   }
+   /**
+   * Get Tartget Url
+   *
+   * Retrieve the target url instance for Blackboard APIs
+   *
+   * @return string
+   */
+   public function getTargetUrl() {
+     return $this->apiConfig['target_url'];
+   }
+   /**
+   * Get Default Api Route Params
+   *
+   * Retrieve the target api route params
+   *
+   * @return string
+   */
+   public function getDefaultParams($learnObject) {
+     return $this->apiConfig['api'][$learnObject]['params'];
    }
 
    /**
@@ -73,7 +98,11 @@ class AuthToken {
    * @return string
    */
    public function getToken() {
-     return $this->payload['access_token'];
+     if ($this->verbose) {
+       echo "AuthToken->getToken() => \n";
+       var_dump($this->payload->access_token);
+     }
+     return $this->payload->access_token;
    }
 
    /**
@@ -86,11 +115,11 @@ class AuthToken {
    */
    public function setToken() {
      if ($this->verbose) {
-       echo $this->tokenRoutes['set_token'] . PHP_EOL;
+       echo $this->apiConfig['set_token'] . PHP_EOL;
        echo PHP_EOL;
      }
 
-      $curl = curl_init($this->tokenRoutes['set_token'] . '?grant_type=client_credentials');
+      $curl = curl_init($this->apiConfig['set_token'] . '?grant_type=client_credentials');
 
       if ($this->verbose) {
         print_r($curl);
@@ -133,11 +162,11 @@ class AuthToken {
    */
    public function revokeToken() {
      if ($this->verbose) {
-       echo $this->tokenRoutes['revoke_token'] . PHP_EOL;
+       echo $this->apiConfig['revoke_token'] . PHP_EOL;
        echo PHP_EOL;
      }
 
-      $curl = curl_init($this->tokenRoutes['revoke_token']);
+      $curl = curl_init($this->apiConfig['revoke_token']);
 
       if ($this->verbose) {
         print_r($curl);
