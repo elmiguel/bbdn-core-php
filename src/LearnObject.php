@@ -31,17 +31,16 @@ class LearnObject {
     $base_path = '/learn/api/public/v1/';
     $this->auth = "Bearer " . $options['auth']->getToken();
     $this->target_url =  $options['auth']->getTargetUrl();
-    // $this->api_type = [k for k, v in validators.items() if $options[k]][0];
+
     $this->api_type = '';
     foreach ($options->args as $k=>$v){
       if ($options[$k] == true && in_array($k, $this->learnObjects)) {
         $this->api_type = $k;
       };
     }
-    // echo "$ this - >api_type: $this->api_type\n";
 
     $this->api_path = $base_path . $this->api_type;
-    // $this->class_name = $this->api_type.title()[:-1];
+    $this->class_name = substr($this->api_type, 0, -1);
     // $this->validator = validators[$this->api_type];
     $this->res = null;
     $this->isPaginated = False;
@@ -57,12 +56,6 @@ class LearnObject {
       }
       $this->data = $tmp;
     }
-        // with open($options['--file']) as f:
-        //     tmp = json.loads(f.read());
-        //     if not $this->batch:
-        //         tmp = json.dumps(tmp);
-        //
-        //     $this->data = tmp;
 
     $this->debug = $options['--debug'];
     $this->enrollments = $options['--enrollments'];
@@ -73,15 +66,15 @@ class LearnObject {
 
     $default_params = $options['auth']->getDefaultParams($this->api_type);
 
-    // TODO: re-implement param overrides
-    // try:
-    //     override_params = json.loads($options['--params']);
-    //     default_params.update(override_params) if $options['--params'] else default_params
-    //     $this->params = default_params.copy();
-    // except ValueError:
-    //     $this->params = default_params.copy();
-    // except json.decoder.JSONDecodeError:
-    //     $this->params = default_params.copy();
+    try {
+      if($options['--params']) {
+        $this->default_params = json_encode($options['--params']);
+      } else {
+        $this->params = $this->default_params;
+      }
+    } catch (Exception $e) {
+        $this->params = $this->default_params;
+    }
 
     $this->announcements = $options['announcements'];
     $this->contents = $options['contents'];
@@ -94,7 +87,7 @@ class LearnObject {
     $this->terms = $options['terms'];
     $this->users = $options['users'];
 
-    // $this->type = $options['--type'].split(',');
+    $this->type = explode(',', $options['--type']);
     $this->verbose = $options['--verbose'];
     $this->attempts_id = $options['ATTEMPTS-ID'];
     $this->child_course_id = $options['CHILD-COURSE-ID'];
