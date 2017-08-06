@@ -1,5 +1,5 @@
 <?php namespace bbdn\core;
-require_once './bbdn/vendor/autoload.php';
+require_once "./bbdn/vendor/autoload.php";
 /**
 *  AuthToken
 *
@@ -64,7 +64,7 @@ class AuthToken {
    * @return string
    */
    public function getTargetUrl() {
-     return $this->apiConfig['target_url'];
+     return $this->apiConfig["target_url"];
    }
    /**
    * Get Default Api Route Params
@@ -74,7 +74,7 @@ class AuthToken {
    * @return string
    */
    public function getDefaultParams($learnObject) {
-     return $this->apiConfig['api'][$learnObject]['params'];
+     return $this->apiConfig["api"][$learnObject]["params"];
    }
 
    /**
@@ -115,11 +115,11 @@ class AuthToken {
    */
    public function setToken() {
      if ($this->verbose) {
-       echo $this->apiConfig['set_token'] . PHP_EOL;
+       echo $this->apiConfig["set_token"] . PHP_EOL;
        echo PHP_EOL;
      }
 
-      $curl = curl_init($this->apiConfig['set_token'] . '?grant_type=client_credentials');
+      $curl = curl_init($this->apiConfig["set_token"] . "?grant_type=client_credentials");
 
       if ($this->verbose) {
         print_r($curl);
@@ -128,8 +128,8 @@ class AuthToken {
       }
 
       $header = array();
-      $header[] = 'Content-type: application/x-www-form-urlencoded';
-      $header[] = 'Authorization: Basic ' . base64_encode($this->key . ':' . $this->secret);
+      $header[] = "Content-type: application/x-www-form-urlencoded";
+      $header[] = "Authorization: Basic " . base64_encode($this->key . ":" . $this->secret);
 
       if ($this->verbose) {
         print_r($header);
@@ -162,11 +162,11 @@ class AuthToken {
    */
    public function revokeToken() {
      if ($this->verbose) {
-       echo $this->apiConfig['revoke_token'] . PHP_EOL;
+       echo $this->apiConfig["revoke_token"] . PHP_EOL;
        echo PHP_EOL;
      }
 
-      $curl = curl_init($this->apiConfig['revoke_token']);
+      $curl = curl_init($this->apiConfig["revoke_token"]);
 
       if ($this->verbose) {
         print_r($curl);
@@ -175,8 +175,8 @@ class AuthToken {
       }
 
       $header = array();
-      // $header[] = 'Content-type: application/x-www-form-urlencoded';
-      $header[] = 'Authorization: Basic ' . base64_encode($this->key . ':' . $this->secret);
+      // $header[] = "Content-type: application/x-www-form-urlencoded";
+      $header[] = "Authorization: Basic " . base64_encode($this->key . ":" . $this->secret);
 
       if ($this->verbose) {
         print_r($header);
@@ -222,5 +222,60 @@ class AuthToken {
      return true;
    }
 
+   /**
+   * Do Rest
+   *
+   * Takes in a BbAPI URL and returns the retult back to the caller`
+   *
+   * @return array
+   */
+   public function doRest($method, $url, $data=null, $params=null) {
+     if ($this->verbose) {
+       echo "BbRestAPI URL: $url" . PHP_EOL;
+
+     }
+
+     if ($params) {
+       $url .= "?" . http_build_query($params);
+     }
+      $curl = curl_init($url);
+
+      if ($this->verbose) {
+        print_r($curl);
+        echo PHP_EOL;
+        echo PHP_EOL;
+      }
+
+      $header = array();
+      $header[] = "Content-type: application/json";
+      $header[] = "Authorization: Bearer {$this->payload->access_token}";
+
+      if ($this->verbose) {
+        print_r($header);
+        echo PHP_EOL;
+        echo PHP_EOL;
+      }
+
+      curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+      curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+
+      if ($data) {
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+      }
+
+      curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($curl, CURLOPT_VERBOSE, 1);
+      $resp = curl_exec($curl);
+
+      if ($this->verbose) {
+        // print_r($resp);
+        var_dump($resp);
+        echo PHP_EOL;
+        echo PHP_EOL;
+      }
+
+
+      return $resp;
+   }
 
 }
