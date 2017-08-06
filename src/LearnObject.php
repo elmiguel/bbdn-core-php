@@ -122,6 +122,149 @@ class LearnObject {
     $this->do_rest($url);
   }
 
+  // @staticmethod
+  // def date_handler(obj):
+  //     if hasattr(obj, 'isoformat'):
+  //         return obj.isoformat()
+  //     else:
+  //         raise TypeError
+
+  // def create(self):
+  //     try:
+  //         if $this->batch:
+  //             if $this->verbose:
+  //                 # print("Data from create:", type($this->data), json.loads($this->data))
+  //                 print("Data from create:", type($this->data), $this->data)
+  //
+  //             for item in $this->data:
+  //                 if $this->debug or $this->verbose:
+  //                     print(item)
+  //                     print($this->type)
+  //
+  //                 if $this->memberships and not $this->course_id:
+  //                     $this->course_id = item['courseId']
+  //                     $this->user_id = item['userId']
+  //
+  //                 $this->current_data = item
+  //
+  //                 try:
+  //                     del $this->current_data['id']
+  //                 except KeyError:
+  //                     if $this->verbose:
+  //                         print("Info: primaryId (id) was supplied in data file.")
+  //
+  //                 try:
+  //                     del $this->current_data['userId']
+  //                 except KeyError:
+  //                     if $this->verbose:
+  //                         print("Info: userId (id) was supplied in data file.")
+  //
+  //                 if $this->verbose:
+  //                     print("Data from create:", type($this->current_data),
+  //                           json.dumps($this->current_data))
+  //
+  //                 if $this->validator.validate($this->current_data):
+  //                     if $this->verbose:
+  //                         print("[%s] create called" % $this->class_name)
+  //                     $this->current_data = json.dumps($this->current_data)
+  //                     url = $this->prep_url()
+  //                     print(url)
+  //                     $this->do_rest(url)
+  //
+  //                 # if $this->validator.validate(json.loads($this->data)):
+  //                 #     if $this->verbose:
+  //                 #         print("[%s] create called" % $this->class_name)
+  //                 #     url = $this->prep_url()
+  //                 #     print(url)
+  //                 #     $this->do_rest(url)
+  //
+  //         else:
+  //             if $this->verbose:
+  //                 print("Data from create:", type($this->data), json.loads($this->data))
+  //
+  //             if $this->validator.validate(json.loads($this->data)):
+  //                 if $this->verbose:
+  //                     print("[%s] create called" % $this->class_name)
+  //                 url = $this->prep_url()
+  //                 print(url)
+  //                 $this->do_rest(url)
+  //
+  //     except SchemaError as se:
+  //         $this->res = {"error": se}
+  //
+  //     print($this->res)
+
+  // def update(self, obj_id=None, id_type=None, data=None, params=None):
+  //     try:
+  //         if $this->batch:
+  //             for item in $this->data:
+  //                 if $this->debug or $this->verbose:
+  //                     print(item)
+  //                     print($this->type)
+  //                 update_key = 'id' if $this->type[0] == 'primaryId' else $this->type[0]
+  //                 if $this->debug or $this->verbose:
+  //                     print(update_key)
+  //
+  //                 if $this->memberships and not $this->course_id:
+  //                     $this->course_id = item['courseId']
+  //                     $this->user_id = item['userId']
+  //                 else:
+  //                     try:
+  //                         $this->current_id = item[update_key]
+  //                     except KeyError:
+  //                         print('Error assigning item[update_key]')
+  //                         print(item)
+  //                         sys.exit(1)
+  //
+  //                 $this->current_data = item
+  //
+  //                 try:
+  //                     del $this->current_data['id']
+  //                 except KeyError:
+  //                     if $this->verbose:
+  //                         print("Info: primaryId (id) was supplied in data file.")
+  //
+  //                 if $this->verbose:
+  //                     print("Data from update:", type($this->current_data),
+  //                           json.dumps($this->current_data))
+  //
+  //                 if $this->validator.validate($this->current_data):
+  //                     if $this->verbose:
+  //                         print("[%s] update called" % $this->class_name)
+  //                     $this->current_data = json.dumps($this->current_data)
+  //                     url = $this->prep_url()
+  //                     print(url)
+  //                     $this->do_rest(url)
+  //
+  //         else:
+  //             if $this->verbose:
+  //                 print("Data from update:", type($this->data), json.loads($this->data))
+  //
+  //             if $this->validator.validate(json.loads($this->data)):
+  //                 if $this->verbose:
+  //                     print("[%s] update called" % $this->class_name)
+  //                 url = $this->prep_url()
+  //                 print(url)
+  //                 $this->do_rest(url)
+  //
+  //     except SchemaError as se:
+  //         $this->res = {"error": se}
+  //
+  //     print($this->res)
+
+
+  function delete() {
+    if ($this->verbose){
+     echo "[$this->class_name] delete called" . PHP_EOL;
+    }
+    $url = $this->prep_url();
+    echo $url . PHP_EOL;
+    echo $this->method, $url, $this->data, $this->params;
+    echo PHP_EOL;
+   $result = $this->auth->doRest(strtoupper($this->method), $url, $this->data, $this->params);
+    echo $result;
+    echo PHP_EOL;
+  }
 
   function prep_url() {
     // $url = "https://{$this->target_url}{$this->api_path}";
