@@ -116,157 +116,189 @@ class LearnObject {
       $url = "https://{$this->target_url}{$this->page}";
       $this->isPaginated = true;
     } else{
-      $url = $this->prep_url();
+      $url = $this->prepUrl();
     }
 
     $this->do_rest($url);
   }
 
-  // @staticmethod
-  // def date_handler(obj):
-  //     if hasattr(obj, 'isoformat'):
-  //         return obj.isoformat()
-  //     else:
-  //         raise TypeError
+  function create() {
+    $resp = null;
+    try {
+      if ($this->batch){
+          if ($this->verbose) {
+              # print("Data from create:", type($this->data), json.loads($this->data))
+              echo "Data from create:" . PHP_EOL;
+              var_dump($this->data);
+              echo $this->data;
+              echo PHP_EOL;
+          }
+          foreach($this->data as $item) {
+              if ($this->debug || $this->verbose) {
+                echo $item;
+                echo PHP_EOL;
+                echo $this->type;
+                echo PHP_EOL;
+              }
 
-  // def create(self):
-  //     try:
-  //         if $this->batch:
-  //             if $this->verbose:
-  //                 # print("Data from create:", type($this->data), json.loads($this->data))
-  //                 print("Data from create:", type($this->data), $this->data)
-  //
-  //             for item in $this->data:
-  //                 if $this->debug or $this->verbose:
-  //                     print(item)
-  //                     print($this->type)
-  //
-  //                 if $this->memberships and not $this->course_id:
-  //                     $this->course_id = item['courseId']
-  //                     $this->user_id = item['userId']
-  //
-  //                 $this->current_data = item
-  //
-  //                 try:
-  //                     del $this->current_data['id']
-  //                 except KeyError:
-  //                     if $this->verbose:
-  //                         print("Info: primaryId (id) was supplied in data file.")
-  //
-  //                 try:
-  //                     del $this->current_data['userId']
-  //                 except KeyError:
-  //                     if $this->verbose:
-  //                         print("Info: userId (id) was supplied in data file.")
-  //
-  //                 if $this->verbose:
-  //                     print("Data from create:", type($this->current_data),
-  //                           json.dumps($this->current_data))
-  //
-  //                 if $this->validator.validate($this->current_data):
-  //                     if $this->verbose:
-  //                         print("[%s] create called" % $this->class_name)
-  //                     $this->current_data = json.dumps($this->current_data)
-  //                     url = $this->prep_url()
-  //                     print(url)
-  //                     $this->do_rest(url)
-  //
-  //                 # if $this->validator.validate(json.loads($this->data)):
-  //                 #     if $this->verbose:
-  //                 #         print("[%s] create called" % $this->class_name)
-  //                 #     url = $this->prep_url()
-  //                 #     print(url)
-  //                 #     $this->do_rest(url)
-  //
-  //         else:
-  //             if $this->verbose:
-  //                 print("Data from create:", type($this->data), json.loads($this->data))
-  //
-  //             if $this->validator.validate(json.loads($this->data)):
-  //                 if $this->verbose:
-  //                     print("[%s] create called" % $this->class_name)
-  //                 url = $this->prep_url()
-  //                 print(url)
-  //                 $this->do_rest(url)
-  //
-  //     except SchemaError as se:
-  //         $this->res = {"error": se}
-  //
-  //     print($this->res)
+              if ($this->memberships && !$this->course_id) {
+                $this->course_id = $item['courseId'];
+                $this->user_id = $item['userId'];
+              }
+              $this->current_data = $item;
 
-  // def update(self, obj_id=None, id_type=None, data=None, params=None):
-  //     try:
-  //         if $this->batch:
-  //             for item in $this->data:
-  //                 if $this->debug or $this->verbose:
-  //                     print(item)
-  //                     print($this->type)
-  //                 update_key = 'id' if $this->type[0] == 'primaryId' else $this->type[0]
-  //                 if $this->debug or $this->verbose:
-  //                     print(update_key)
-  //
-  //                 if $this->memberships and not $this->course_id:
-  //                     $this->course_id = item['courseId']
-  //                     $this->user_id = item['userId']
-  //                 else:
-  //                     try:
-  //                         $this->current_id = item[update_key]
-  //                     except KeyError:
-  //                         print('Error assigning item[update_key]')
-  //                         print(item)
-  //                         sys.exit(1)
-  //
-  //                 $this->current_data = item
-  //
-  //                 try:
-  //                     del $this->current_data['id']
-  //                 except KeyError:
-  //                     if $this->verbose:
-  //                         print("Info: primaryId (id) was supplied in data file.")
-  //
-  //                 if $this->verbose:
-  //                     print("Data from update:", type($this->current_data),
-  //                           json.dumps($this->current_data))
-  //
-  //                 if $this->validator.validate($this->current_data):
-  //                     if $this->verbose:
-  //                         print("[%s] update called" % $this->class_name)
-  //                     $this->current_data = json.dumps($this->current_data)
-  //                     url = $this->prep_url()
-  //                     print(url)
-  //                     $this->do_rest(url)
-  //
-  //         else:
-  //             if $this->verbose:
-  //                 print("Data from update:", type($this->data), json.loads($this->data))
-  //
-  //             if $this->validator.validate(json.loads($this->data)):
-  //                 if $this->verbose:
-  //                     print("[%s] update called" % $this->class_name)
-  //                 url = $this->prep_url()
-  //                 print(url)
-  //                 $this->do_rest(url)
-  //
-  //     except SchemaError as se:
-  //         $this->res = {"error": se}
-  //
-  //     print($this->res)
+              try {
+                $this->current_data['id'] = null;
+              } catch (Exception $e){
+                if ($this->verbose){
+                  echo "Info: primaryId (id) was supplied in data file." . PHP_EOL;
+                }
+              }
+              try {
+                $this->current_data['userId'] = null;
+              } catch (Exception $e){
+                if ($this->verbose){
+                  echo "Info: userId (id) was supplied in data file." . PHP_EOL;
+                }
+              }
 
+              if ($this->verbose){
+                  echo "Data from create:" . PHP_EOL;
+                  var_dump($this->current_data);
+                  echo json_decode($this->current_data);
+              }
+
+              // if $this->validator.validate($this->current_data) {
+                  if ($this->verbose){
+                    echo "[{$this->class_name}] create called" . PHP_EOL;
+                  }
+
+                  $this->current_data = json_decode($this->current_data);
+                  $url = $this->prepUrl();
+                  echo $url . PHP_EOL;
+                  $resp = $this->auth->doRest(strtoupper($this->method),$url, $this->data, $this->params);
+              // }
+              # if $this->validator.validate(json.loads($this->data)):
+              #     if $this->verbose:
+              #         print("[%s] create called" % $this->class_name)
+              #     url = $this->prepUrl()
+              #     print(url)
+              #     $this->do_rest(url)
+          }
+      } else {
+          if ($this->verbose) {
+            echo "Data from create:" .  PHP_EOL;
+            var_dump($this->data);
+            echo json_encode($this->data);
+          }
+
+          // if $this->validator.validate(json.loads($this->data)) {
+              if ($this->verbose) {
+                echo "[{$this->class_name}] create called" . PHP_EOL;
+              }
+
+              $url = $this->prepUrl();
+              echo $url . PHP_EOL;
+              $resp = $this->auth->doRest(strtoupper($this->method), $url, $this->data, $this->params);
+          // }
+      }
+    } catch (Exception $e) {
+      $resp = "{\"error\": {$e->getMessage()}}";
+    }
+    echo $resp;
+  }
+
+  function update(){
+    $resp = null;
+    try {
+      if ($this->batch) {
+        foreach ($this->data as $item) {
+          if ($this->debug || $this->verbose){
+            echo $item . PHP_EOL;
+            echo $this->type . PHP_EOL;
+          }
+
+          $update_key = ($this->type[0] == 'primaryId') ? 'id' : $this->type[0];
+          if ($this->debug || $this->verbose) {
+            echo $update_key . PHP_EOL;
+          }
+
+          if ($this->memberships && !$this->course_id){
+            $this->course_id = $item['courseId'];
+            $this->user_id = $item['userId'];
+          } else {
+            try{
+                $this->current_id = $item[$update_key];
+            } catch (Exception $e){
+              echo "Error assigning item[update_key]" . PHP_EOL;
+              echo $item . PHP_EOL;
+              // sys.exit(1);
+            }
+          }
+
+          $this->current_data = $item;
+
+          try {
+            $this->current_data['id'] = null;
+          } catch (Exception $e) {
+            if ($this->verbose){
+              echo "Info: primaryId (id) was supplied in data file." . PHP_EOL;
+            }
+          }
+
+          if ($this->verbose){
+            echo "Data from update:" . PHP_EOL;
+            var_dump($this->current_data);
+            echo json_decode($this->current_data);
+          }
+
+          // if $this->validator.validate($this->current_data):
+              if ($this->verbose) {
+                echo "[$this->class_name] update called" . PHP_EOL;
+              }
+              $this->current_data = json_decode($this->current_data);
+              $url = $this->prepUrl();
+              echo $url . PHP_EOL;
+              $resp = $this->auth->doRest(strtoupper($this->method), $url, $this->data, $this->params);
+          // }
+        }
+      } else {
+        if ($this->verbose){
+          echo "Data from update:" . PHP_EOL;
+          var_dump($this->data);
+          echo json_encode($this->data);
+        }
+
+        // if $this->validator.validate(json.loads($this->data)) {
+          if ($this->verbose) {
+            echo "[$this->class_name] update called" . PHP_EOL;
+          }
+
+          $url = $this->prepUrl();
+          echo $url . PHP_EOL;
+          $resp = $this->auth->doRest(strtoupper($this->method), $url, $this->data, $this->params);
+        // }
+      }
+    } catch (Exception $e){
+      $resp = "{\"error\": {$e->getMessage()}}";
+    }
+    echo $resp;
+  }
 
   function delete() {
     if ($this->verbose){
      echo "[$this->class_name] delete called" . PHP_EOL;
     }
-    $url = $this->prep_url();
+    $url = $this->prepUrl();
     echo $url . PHP_EOL;
-    echo $this->method, $url, $this->data, $this->params;
-    echo PHP_EOL;
-   $result = $this->auth->doRest(strtoupper($this->method), $url, $this->data, $this->params);
+    echo "$this->method, $url, $this->data, $this->params" . PHP_EOL;
+
+    $result = $this->auth->doRest(strtoupper($this->method), $url, $this->data, $this->params);
     echo $result;
     echo PHP_EOL;
   }
 
-  function prep_url() {
+  function prepUrl() {
     // $url = "https://{$this->target_url}{$this->api_path}";
     $url = "{$this->target_url}{$this->api_path}";
     if ($this->debug) {
@@ -277,7 +309,7 @@ class LearnObject {
     if ($this->api_type == "users") {
       if ($this->current_id || $this->user_id){
         if ($this->debug){
-          echo "[prep_url: users] {$this->current_id}, {$this->user_id}" . PHP_EOL;
+          echo "[prepUrl: users] {$this->current_id}, {$this->user_id}" . PHP_EOL;
         }
         // TODO: the or || bails out on sprintf and return 1, fix!
         // $url .= sprintf("/%s:%s", $this->type[0], $this->current_id || $this->user_id);
@@ -367,7 +399,7 @@ class LearnObject {
     } else if ($this->api_type == "memberships"){
       # memberships was pre-appended: replace with courses
       if ($this->verbose) {
-        echo "[prep_url():memberships] called" . PHP_EOL;
+        echo "[prepUrl():memberships] called" . PHP_EOL;
       }
 
       $url = str_replace("memberships", "courses", $url);

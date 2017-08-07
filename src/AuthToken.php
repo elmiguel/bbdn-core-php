@@ -208,6 +208,7 @@ class AuthToken {
    * @return boolean
    */
    public function dateHandler() {
+    //  isoformat???
      return true;
    }
 
